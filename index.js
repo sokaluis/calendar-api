@@ -20,6 +20,7 @@ app.use(express.json());
 
 // Importar rutas
 app.use("/api/auth", require("./routes/auth"));
+app.use("/api/events", require("./routes/events"));
 
 // Escuchar peticiones
 app.listen(process.env.PORT, () => {
