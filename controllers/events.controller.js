@@ -15,16 +15,22 @@ const createEvent = async (req = request, res = response) => {
 };
 
 const updateEvent = async (req = request, res = response) => {
+  const { params } = req;
+
   res.json({
     ok: true,
     msg: "Evento actualizado",
+    id: params.id,
   });
 };
 
 const deleteEvent = async (req = request, res = response) => {
+  const { params } = req;
+
   res.json({
     ok: true,
     msg: "Evento eliminado",
+    id: params.id,
   });
 };
 
