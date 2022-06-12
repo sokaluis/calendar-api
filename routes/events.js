@@ -6,7 +6,7 @@ const { check } = require("express-validator");
 const { Router } = require("express");
 
 const {
-  getEvents,
+  getAllEvents,
   createEvent,
   updateEvent,
   deleteEvent,
@@ -20,7 +20,7 @@ const router = Router();
 // Apply middleware to all routes
 router.use(validateJWT);
 
-router.get("/", getEvents); // GET /api/events
+router.get("/", getAllEvents); // GET /api/events
 router.post(
   "/",
   [

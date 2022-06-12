@@ -1,7 +1,7 @@
 const { response, request } = require("express");
 const Event = require("../models/Event.model");
 
-const getEvents = async (req = request, res = response) => {
+const getAllEvents = async (req = request, res = response) => {
   const events = await Event.find().populate("user", "name");
 
   res.json({
@@ -33,27 +33,80 @@ const createEvent = async (req = request, res = response) => {
 };
 
 const updateEvent = async (req = request, res = response) => {
-  const { params } = req;
+  const {
+    params: { id: eventId },
+  } = req;
 
-  res.json({
-    ok: true,
-    msg: "Evento actualizado",
-    id: params.id,
-  });
+  try {
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Evento no encontrado",
+      });
+    }
+    if (event.user.toString() !== req.uuid) {
+      return res.status(401).json({
+        ok: false,
+        msg: "No tienes permiso para actualizar este evento",
+      });
+    }
+    const newEvent = {
+      ...req.body,
+      user: req.uuid,
+    };
+    const eventUpdated = await Event.findByIdAndUpdate(eventId, newEvent, {
+      new: true,
+    });
+    res.json({
+      ok: true,
+      msg: "Evento actualizado",
+      evento: eventUpdated,
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      msg: "Error al actualizar el evento",
+      error,
+    });
+  }
 };
 
 const deleteEvent = async (req = request, res = response) => {
-  const { params } = req;
+  const {
+    params: { id: eventId },
+  } = req;
 
-  res.json({
-    ok: true,
-    msg: "Evento eliminado",
-    id: params.id,
-  });
+  try {
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Evento no encontrado",
+      });
+    }
+    if (event.user.toString() !== req.uuid) {
+      return res.status(401).json({
+        ok: false,
+        msg: "No tienes permiso para actualizar este evento",
+      });
+    }
+    await Event.findByIdAndDelete(eventId);
+    res.json({
+      ok: true,
+      msg: "Evento eliminado",
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      msg: "Error al eliminar el evento",
+      error,
+    });
+  }
 };
 
 module.exports = {
-  getEvents,
+  getAllEvents,
   createEvent,
   updateEvent,
   deleteEvent,
