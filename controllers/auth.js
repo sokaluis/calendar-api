@@ -82,10 +82,14 @@ const loginUser = async (req = request, res = response) => {
 };
 
 // Renew Token
-const renewToken = (req = request, res = response) => {
+const renewToken = async (req = request, res = response) => {
+  const { uid, name } = req;
+  const token = await generateToken(uid, name);
+
   res.json({
     ok: true,
     mensaje: "Renew",
+    token,
   });
 };
 
