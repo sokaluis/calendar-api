@@ -7,13 +7,11 @@ const app = express();
 // Directorio publico
 app.use(express.static("public"));
 
-// Crear una ruta
-// app.get("/", (req, res) => {
-//   res.json({
-//     ok: true,
-//     mensaje: "Petición realizada correctamente",
-//   });
-// });
+// Lectura y escritura de archivos (siempre antes de definir las rutas)
+app.use(express.json());
+
+// Importar rutas
+app.use("/api/auth", require("./routes/auth"));
 
 // Escuchar peticiones
 app.listen(process.env.PORT, () => {
