@@ -1,15 +1,23 @@
 const { response, request } = require("express");
+const User = require("../models/User.model");
 
 // Create User
-const createUser = (req = request, res = response) => {
-  const { name, email, password } = req.body;
-  res.status(201).json({
-    ok: true,
-    mensaje: "Registro",
-    name,
-    email,
-    password,
-  });
+const createUser = async (req = request, res = response) => {
+  try {
+    const user = new User(req.body);
+    await user.save();
+
+    res.status(201).json({
+      ok: true,
+      mensaje: "Registro",
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      mensaje: "Error al registrar",
+      error,
+    });
+  }
 };
 
 // Login User
@@ -18,6 +26,8 @@ const loginUser = (req = request, res = response) => {
   res.status(200).json({
     ok: true,
     mensaje: "Login",
+    email,
+    password,
   });
 };
 
