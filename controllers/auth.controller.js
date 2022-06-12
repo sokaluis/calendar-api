@@ -83,8 +83,8 @@ const loginUser = async (req = request, res = response) => {
 
 // Renew Token
 const renewToken = async (req = request, res = response) => {
-  const { uid, name } = req;
-  const token = await generateToken(uid, name);
+  const { uuid, name } = req;
+  const token = await generateToken(uuid, name);
 
   res.json({
     ok: true,

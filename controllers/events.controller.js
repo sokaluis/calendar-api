@@ -1,4 +1,5 @@
 const { response, request } = require("express");
+const Event = require("../models/Event.model");
 
 const getEvents = async (req = request, res = response) => {
   res.json({
@@ -8,10 +9,26 @@ const getEvents = async (req = request, res = response) => {
 };
 
 const createEvent = async (req = request, res = response) => {
-  res.json({
-    ok: true,
-    msg: "Evento creado",
-  });
+  const event = new Event(req.body);
+
+  console.log(req);
+
+  try {
+    event.user = req.uuid;
+    const eventSaved = await event.save();
+
+    return res.json({
+      ok: true,
+      msg: "Evento creado",
+      eventSaved,
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      msg: "Error al crear el evento",
+      error,
+    });
+  }
 };
 
 const updateEvent = async (req = request, res = response) => {
