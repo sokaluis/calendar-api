@@ -13,11 +13,23 @@ router.post(
   [
     // Multiple middlewares
     check("name", "El nombre es obligatorio").not().isEmpty(),
+    check("email", "El email es obligatorio").isEmail(),
+    check(
+      "password",
+      "La contraseña debe de ser de al menos 6 caracteres"
+    ).isLength({ min: 6 }),
   ],
   createUser
 ); // POST /api/auth/new
 
-router.post("/", loginUser); // POST /api/auth
+router.post(
+  "/",
+  [
+    check("email", "El email es obligatorio").isEmail(),
+    check("password", "La contraseña es obligatoria").exists(),
+  ],
+  loginUser
+); // POST /api/auth
 
 router.get("/renew", renewToken); // GET /api/auth/renew
 
