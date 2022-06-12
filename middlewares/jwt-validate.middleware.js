@@ -18,4 +18,4 @@ const validateJWT = (req, res = response, next) => {
   }
 };
 
-module.exports = validateJWT;
+module.exports = { validateJWT };
